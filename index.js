@@ -16,6 +16,17 @@ initGraph()
 let leftPiece ;
 // console.log(positionOfRooms)
 
+function genImg(r,x,y)
+{
+   const img = document.createElement('img');
+   img.src=`./img/${r.type}.png`
+   img.id = r.id;
+   img.classList.add('room');
+   img.style.transform+=`rotate(${r.ang}deg)`;
+   img.style.top=`${x}px`;
+   img.style.left=`${y}px`;
+   return img;
+}
 const fixedRooms =
    [['bend', 1],
    ['t-shape', 2],
@@ -59,41 +70,43 @@ function initMaze() {
    }
 
    fixedRooms.forEach((e, i) => {
+      const xPos = fixedPositions[i].x;
+      const yPos = fixedPositions[i].y;
       const r = new room(fixedPositions[i].x, fixedPositions[i].y, e[0], e[1],genId());
       r.render();
-      maze.append(r.gui)
+      maze.append(genImg(r,xPos,yPos))
       console.log(r)
       const x = fixedPositions[i].x/100;
       const y = fixedPositions[i].y/100;
       graph[x][y]=r;
    })
-   const rid =[];
-   for(let i =0;i<13;i++)
-   {
-      rid.push('straight');
-   }
-   for(let i =0;i<15;i++)
-   {
-      rid.push('bend');
-   }
-   for(let i =0;i<6;i++)
-   {
-      rid.push('t-shape');
-   }
-   rid.sort((a,b)=>(Math.random()*4-2));
-   console.log(rid)
-   leftPiece = new room(0,0,rid.pop(),0,50)
-   leftP.append(leftPiece.gui)
-   console.log(rid)
-   console.log(dynamicPosition)
-   rid.forEach((e,i)=>{
-      const r = new room(dynamicPosition[i].x,dynamicPosition[i].y,e,Math.random()*4,genId());
-      r.render();
-      maze.append(r.gui)
-      const x= dynamicPosition[i].x/100;
-      const y= dynamicPosition[i].y/100;
-      graph[x][y]=r;
-   })
+   // const rid =[];
+   // for(let i =0;i<13;i++)
+   // {
+   //    rid.push('straight');
+   // }
+   // for(let i =0;i<15;i++)
+   // {
+   //    rid.push('bend');
+   // }
+   // for(let i =0;i<6;i++)
+   // {
+   //    rid.push('t-shape');
+   // }
+   // rid.sort((a,b)=>(Math.random()*4-2));
+   // console.log(rid)
+   // leftPiece = new room(0,0,rid.pop(),0,50)
+   // leftP.append(leftPiece.gui)
+   // console.log(rid)
+   // console.log(dynamicPosition)
+   // rid.forEach((e,i)=>{
+   //    const r = new room(dynamicPosition[i].x,dynamicPosition[i].y,e,Math.random()*4,genId());
+   //    r.render();
+   //    maze.append(r.gui)
+   //    const x= dynamicPosition[i].x/100;
+   //    const y= dynamicPosition[i].y/100;
+   //    graph[x][y]=r;
+   // })
 
 }
 initMaze();

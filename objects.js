@@ -25,8 +25,10 @@ class room {
             ang += 90;
             const d = this.door.pop();
             this.door.unshift(d);
+            ang%=360;
         }
         this.gui.style.transform += `rotate(${ang}deg)`;
+        this.ang=ang;
     }
 
     render() {
