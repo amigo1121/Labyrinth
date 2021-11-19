@@ -79,33 +79,34 @@ function initMaze() {
       const y = fixedPositions[i].y/100;
       graph[x][y]=r;
    })
-   // const rid =[];
-   // for(let i =0;i<13;i++)
-   // {
-   //    rid.push('straight');
-   // }
-   // for(let i =0;i<15;i++)
-   // {
-   //    rid.push('bend');
-   // }
-   // for(let i =0;i<6;i++)
-   // {
-   //    rid.push('t-shape');
-   // }
-   // rid.sort((a,b)=>(Math.random()*4-2));
-   // console.log(rid)
-   // leftPiece = new room(0,0,rid.pop(),0,50)
-   // leftP.append(leftPiece.gui)
-   // console.log(rid)
-   // console.log(dynamicPosition)
-   // rid.forEach((e,i)=>{
-   //    const r = new room(dynamicPosition[i].x,dynamicPosition[i].y,e,Math.random()*4,genId());
-   //    r.render();
-   //    maze.append(r.gui)
-   //    const x= dynamicPosition[i].x/100;
-   //    const y= dynamicPosition[i].y/100;
-   //    graph[x][y]=r;
-   // })
+   const rid =[];
+   for(let i =0;i<13;i++)
+   {
+      rid.push('straight');
+   }
+   for(let i =0;i<15;i++)
+   {
+      rid.push('bend');
+   }
+   for(let i =0;i<6;i++)
+   {
+      rid.push('t-shape');
+   }
+   rid.sort((a,b)=>(Math.random()*4-2));
+   console.log(rid)
+   leftPiece = new room(rid.pop(),0,50)
+   leftP.append(genImg(leftPiece,0,0));
+   console.log(rid)
+   console.log(dynamicPosition)
+   rid.forEach((e,i)=>{
+      const xPos = dynamicPosition[i].x;
+      const yPos =dynamicPosition[i].y;
+      const r = new room(e,Math.random()*4,genId());
+      maze.append(genImg(r,xPos,yPos))
+      const x= xPos/100;
+      const y= yPos/100;
+      graph[x][y]=r;
+   })
 
 }
 initMaze();
@@ -126,4 +127,6 @@ function rotateIMG(event)
    leftPiece.beRotated();
    // console.log(leftPiece.door);
 }
+// get ids from an row
+
 
