@@ -8,10 +8,6 @@ class room {
         this.type = type;
         this.id = id;
         this.door = roomTypes[this.type];
-        this.gui = document.createElement('img');
-        this.gui.src = `./img/${this.type}.png`
-        this.gui.id = id;
-        this.gui.classList.add('room');
         // console.log(Math.round(num))
         this.num = Math.floor(num);
         this.rotate(this.num);
@@ -25,7 +21,6 @@ class room {
             this.door.unshift(d);
             ang %= 360;
         }
-        this.gui.style.transform += `rotate(${ang}deg)`;
         this.ang = ang;
     }
 
