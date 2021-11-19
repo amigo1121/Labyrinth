@@ -72,8 +72,7 @@ function initMaze() {
    fixedRooms.forEach((e, i) => {
       const xPos = fixedPositions[i].x;
       const yPos = fixedPositions[i].y;
-      const r = new room(fixedPositions[i].x, fixedPositions[i].y, e[0], e[1],genId());
-      r.render();
+      const r = new room( e[0], e[1],genId());
       maze.append(genImg(r,xPos,yPos))
       console.log(r)
       const x = fixedPositions[i].x/100;

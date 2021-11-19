@@ -4,18 +4,16 @@ const roomTypes = {
     't-shape': [true, true, false, true]
 }
 class room {
-    constructor(x, y, type, num ,id) {
-        this.x = x;
-        this.y = y;
+    constructor(type, num, id) {
         this.type = type;
-        this.id=id;
+        this.id = id;
         this.door = roomTypes[this.type];
         this.gui = document.createElement('img');
         this.gui.src = `./img/${this.type}.png`
-        this.gui.id=id;
+        this.gui.id = id;
         this.gui.classList.add('room');
         // console.log(Math.round(num))
-        this.num=Math.floor(num);
+        this.num = Math.floor(num);
         this.rotate(this.num);
     }
 
@@ -25,10 +23,10 @@ class room {
             ang += 90;
             const d = this.door.pop();
             this.door.unshift(d);
-            ang%=360;
+            ang %= 360;
         }
         this.gui.style.transform += `rotate(${ang}deg)`;
-        this.ang=ang;
+        this.ang = ang;
     }
 
     render() {
@@ -36,11 +34,10 @@ class room {
         this.gui.style.left = `${this.y}px`;
     }
 
-    beRotated()
-    {
+    beRotated() {
         const d = this.door.pop();
         this.door.unshift(d);
     }
-    
+
 }
 export { room }
