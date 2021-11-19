@@ -20,12 +20,6 @@ class room {
             // console.log(this.door)
         }
     }
-
-    render() {
-        this.gui.style.top = `${this.x}px`;
-        this.gui.style.left = `${this.y}px`;
-    }
-
     beRotated() {
         const d = this.door.pop();
         this.door.unshift(d);
