@@ -7,21 +7,18 @@ class room {
     constructor(type, num, id) {
         this.type = type;
         this.id = id;
-        this.door = roomTypes[this.type];
+        this.door = Array.from(roomTypes[this.type]);
         // console.log(Math.round(num))
         this.num = Math.floor(num);
-        this.rotate(this.num);
-    }
-
-    rotate(num) {
-        let ang = 0;
-        for (let i = 0; i < num; i++) {
-            ang += 90;
-            const d = this.door.pop();
+        this.ang = 0;
+        for (let i = 0; i < this.num; i++) {
+            // console.log(this.door)
+            this.ang += 90;
+            this.ang %= 360;
+            let d = this.door.pop();
             this.door.unshift(d);
-            ang %= 360;
+            // console.log(this.door)
         }
-        this.ang = ang;
     }
 
     render() {
