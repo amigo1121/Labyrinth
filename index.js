@@ -155,9 +155,9 @@ function arrowClickHandle(e) {
       let deleteId;
       if (data.dir === 'left') {
          delta = -100;
-         deleteId = Ids.shift();
+         deleteId = Ids[0];
       }
-      else { delta = 100; deleteId = Ids.pop(); }
+      else { delta = 100; deleteId = Ids[Ids.length-1]; }
       Ids.map(e => document.getElementById(e)).forEach((e, i) => {
 
          setTimeout(() => {
@@ -166,7 +166,8 @@ function arrowClickHandle(e) {
          }, 0)
          setTimeout(() => {
             const d = document.getElementById(deleteId);
-            d.remove();
+            console.log(typeof d)
+           maze.removeChild(d);
          }, 0);
       })
 
@@ -176,11 +177,11 @@ function arrowClickHandle(e) {
       let deleteId;
       if (data.dir === 'up') {
          delta = -100;
-         deleteId = Ids.shift();
+         deleteId = Ids[0];
       }
       else {
          delta = 100;
-         deleteId = Ids.pop();
+         deleteId = Ids[Ids.length-1];
       }
       Ids.map(e => document.getElementById(e)).forEach((e, i) => {
 
@@ -190,7 +191,8 @@ function arrowClickHandle(e) {
          }, 0)
          setTimeout(() => {
             const d = document.getElementById(deleteId);
-            d.remove()
+            maze.removeChild(d);
+            console.log(d)
          }, 0);
       })
    }
