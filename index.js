@@ -22,7 +22,8 @@ let remainRoom;
 let remainPiece;
 // console.log(positionOfRooms)
 
-function genImg(r, x, y) {
+function genGUIRoom(r, x, y) {
+   
   const img = document.createElement("img");
   img.src = `./img/${r.type}.png`;
   img.id = r.id;
@@ -77,7 +78,7 @@ function initMaze() {
     const yPos = fixedPositions[i].y;
     const r = new room(e[0], e[1], genId());
     AllRooms[r.id] = r;
-    maze.append(genImg(r, xPos, yPos));
+    maze.append(genGUIRoom(r, xPos, yPos));
     console.log(r);
     const x = fixedPositions[i].x / 100;
     const y = fixedPositions[i].y / 100;
@@ -97,7 +98,7 @@ function initMaze() {
   console.log(rid);
   remainRoom = new room(rid.pop(), 0, 50);
   AllRooms[remainRoom.id] = remainRoom;
-  remainDiv.append(genImg(remainRoom, 0, 0));
+  remainDiv.append(genGUIRoom(remainRoom, 0, 0));
   console.log(rid);
   console.log(dynamicPosition);
   rid.forEach((e, i) => {
@@ -105,7 +106,7 @@ function initMaze() {
     const yPos = dynamicPosition[i].y;
     const r = new room(e, Math.random() * 4, genId());
     AllRooms[r.id] = r;
-    maze.append(genImg(r, xPos, yPos));
+    maze.append(genGUIRoom(r, xPos, yPos));
     const x = xPos / 100;
     const y = yPos / 100;
     graph[x][y] = r;
@@ -177,8 +178,7 @@ document.addEventListener(
   function (event) {
     // highlight potential drop target when the draggable element enters it
     if (event.target.className.includes("dropable")) {
-      event.target.style.border = "2px solid yellow";
-      event.target.style.boxShadow = "0px 0px 10px yellow";
+      event.target.style.boxShadow = "0px 0px 10px 3px #FAFF00";
     }
   },
   false
