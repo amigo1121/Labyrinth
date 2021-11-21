@@ -195,6 +195,7 @@ document.addEventListener(
   },
   false
 );
+
 function getStartCoord(arrow) {
   const data = arrow.dataset;
   let x, y;
@@ -253,10 +254,11 @@ document.addEventListener(
       // TODO MOVE REMAIN IMG TO REMAINDIV
       remainDiv.appendChild(remainPiece);
     }
+    console.log('graph after drop',graph);
   },
   false
 );
-
+// SECTION get id of whole row or col which need to shift
 function collectIDs(arrow) {
   const data = arrow.dataset;
   console.log(data);
@@ -278,7 +280,7 @@ function collectIDs(arrow) {
     remainPiece = document.getElementById(slideIDs[0]);
   else remainPiece = document.getElementById(slideIDs[slideIDs.length - 1]);
 }
-
+// SECTION GUI room coor
 function getRoomCoor(room) {
   let x = parseInt(room.style.top.replace("px", ""));
   let y = parseInt(room.style.left.replace("px", ""));
@@ -342,10 +344,10 @@ function validMove(x, y) {
    console.log('x',x,'y',y,'prex',previousX,'prey',previousY);
   let ans = true;
   if (x === previousX) {
-    if (y + previousY === 600) ans = false;
+    if (y + previousY === 600 && y*previousY <0) ans = false;
   }
   if (y === previousY) {
-    if (x + previousX === 600) ans = false;
+    if (x + previousX === 600 && x*previousX <0) ans = false;
   }
   return ans;
 }

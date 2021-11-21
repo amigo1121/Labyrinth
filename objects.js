@@ -26,4 +26,7 @@ class room {
     }
 
 }
+class player {
+    
+}
 export { room }
