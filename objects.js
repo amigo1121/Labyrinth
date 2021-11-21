@@ -28,7 +28,7 @@ class room {
   beCapture() {
     this.treasure = undefined;
     const p = document.getElementById(this.id);
-    p.innerText = undefined;
+    p.removeChild(p.firstChild)
   }
 }
 class player {

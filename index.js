@@ -5,7 +5,7 @@ const positionOfRooms = [];
 const fixedPositions = [];
 const dynamicPosition = [];
 const AllRooms = Array(51);
-const numberOfPlayers = 4;
+const numberOfPlayers = 2;
 const pColor = ["red", "blue", "black", "green"];
 const pStartID = [1, 4, 13, 16];
 const players = [];
@@ -13,13 +13,14 @@ let possibleRoom = [];
 let numberOfTreasuresPerPlayer = Math.floor(
   Math.random() * (24 / numberOfPlayers - 1) + 1
 );
+numberOfTreasuresPerPlayer = 2;
 numberOfTreasuresPerPlayer =
   numberOfTreasuresPerPlayer > 2 ? numberOfTreasuresPerPlayer : 2;
 const allTreasures = numberOfPlayers * numberOfTreasuresPerPlayer;
 console.log("tr", numberOfTreasuresPerPlayer);
 console.log("num of tre", allTreasures);
 const treasureArr = [];
-
+const treasure2 = [];
 // TODO INIT TREASURE ARRAY
 function initTreasureArr() {
   for (let i = 1; i <= allTreasures; i++) {
@@ -27,13 +28,16 @@ function initTreasureArr() {
   }
   treasureArr.sort((a, b) => Math.random() * 4 - 2);
   console.log("arr tre", treasureArr);
+  treasureArr.forEach((e) => {
+    treasure2.push(e);
+  });
 }
 initTreasureArr();
 
 // TODO INIT PALYER ARRAY
 function initPlayerArr() {
   for (let i = 0; i < numberOfPlayers; i++) {
-    const its = treasureArr.slice(
+    const its = treasure2.slice(
       i * numberOfTreasuresPerPlayer,
       i * numberOfTreasuresPerPlayer + numberOfTreasuresPerPlayer
     );
@@ -69,7 +73,7 @@ function genGUIRoom(r, x, y) {
   img.style.top = `${x}px`;
   img.style.left = `${y}px`;
   img.style.fontSize = "20px";
-  if (r.treasure != undefined) img.innerText = r.treasure;
+  if (r.treasure != undefined) img.innerHTML += `<p>${r.treasure}</p>`;
   return img;
 }
 const fixedRooms = [
@@ -190,7 +194,7 @@ document.addEventListener(
     console.log(event.target);
     event.target.style.opacity = 0.5;
     if (dragged.className.includes("player")) {
-      //  FIXME implement bfs
+      //  TODO implement bfs
       bfs();
     }
   },
@@ -220,7 +224,7 @@ document.addEventListener(
     const t = event.target;
     if (
       (t.matches(".dropable") && dragged.className.includes("room")) ||
-      (t.matches(".room") && dragged.className.includes('player'))
+      (t.matches(".room") && dragged.className.includes("player"))
     )
       event.preventDefault();
     else return;
@@ -275,7 +279,7 @@ function moveTo(element, x, y) {
   element.style.left = `${y}px`;
 }
 
-// TODO the DROP 
+// TODO the DROP
 document.addEventListener(
   "drop",
   function (event) {
@@ -318,24 +322,43 @@ document.addEventListener(
       console.log("remain piece", remainPiece);
       // TODO MOVE REMAIN IMG TO REMAINDIV
       remainDiv.appendChild(remainPiece);
+      // TODO move the playing piece if it is out
+      Array.from(remainPiece.children).forEach((child) => {
+        if (child.className.includes("player")) {
+          const t = child;
+          comeToNewRoom(t,dragged);
+        }
+      });
       makeRemainPieceDraggable();
     }
     if (
       event.target.className.includes("room") &&
       dragged.className.includes("player")
     ) {
-      console.log("pleyer move");
       if (possibleRoom.includes(event.target)) {
-        console.log("taget", event.target);
-        dragged.parentNode.removeChild(dragged);
-        event.target.appendChild(dragged);
+        //   dragged.parentNode.removeChild(dragged);
+        //   event.target.appendChild(dragged);
+        //   const khobau = parseInt(event.target.innerText);
+        //   const currentPlayer = players.filter(
+        //     (e) => e.id === parseInt(dragged.id)
+        //   )[0];
+        //   currentPlayer.curId = parseInt(event.target.id);
+        //   if (currentPlayer.items.includes(khobau)) {
+        //     const index = currentPlayer.items.indexOf(khobau);
+        //     currentPlayer.items.splice(index, 1);
+        //     console.log(currentPlayer.items);
+        //     AllRooms[parseInt(event.target.id)].beCapture();
+        //   }
+        //   console.log(players.map((e) => e.curId));
+        //   checkWIN();
+        comeToNewRoom(dragged, event.target);
       }
     }
     //  console.log("graph after drop", graph);
   },
   false
 );
-// SECTION get id of whole row or col which need to shift
+// TODO get id of whole row or col which need to shift
 function collectIDs(arrow) {
   const data = arrow.dataset;
   console.log(data);
@@ -357,7 +380,7 @@ function collectIDs(arrow) {
     remainPiece = document.getElementById(slideIDs[0]);
   else remainPiece = document.getElementById(slideIDs[slideIDs.length - 1]);
 }
-// SECTION GUI room coor
+// TODO GUI room coor
 function getRoomCoor(room) {
   let x = parseInt(room.style.top.replace("px", ""));
   let y = parseInt(room.style.left.replace("px", ""));
@@ -455,17 +478,17 @@ function bfs() {
   [xPos, yPos] = getRoomCoor(v);
   xPos /= 100;
   yPos /= 100;
-  console.log(v);
-  console.log("x", xPos, "y", yPos);
+  //   console.log(v);
+  //   console.log("x", xPos, "y", yPos);
   q.push({ v, x: xPos, y: yPos });
   possibleRoom.push(v);
   isVisited[v.id] = true;
   while (q.length > 0) {
     let top = q.shift();
-    console.log("top", top);
+    //  console.log("top", top);
     //  top.v the GUI element
     const r = AllRooms[top.v.id];
-    console.log("r", r);
+    //  console.log("r", r);
     r.door.forEach((d, i) => {
       if (d) {
         let newX = top.x + e[i];
@@ -490,4 +513,25 @@ function bfs() {
   possibleRoom.forEach((e) => {
     e.style.opacity = "0.5";
   });
+}
+function checkWIN() {
+  players.forEach((e) => {
+    if (e.curId === e.startId && e.items.length === 0)
+      alert("Player " + e.color + " is the winner!!!");
+  });
+}
+function comeToNewRoom(player, newRoom) {
+  player.parentNode.removeChild(player);
+  newRoom.appendChild(player);
+  const khobau = parseInt(newRoom.firstElementChild.innerText);
+  const currentPlayer = players.filter((e) => e.id === parseInt(player.id))[0];
+  currentPlayer.curId = parseInt(newRoom.id);
+  if (currentPlayer.items.includes(khobau)) {
+    const index = currentPlayer.items.indexOf(khobau);
+    currentPlayer.items.splice(index, 1);
+    console.log(currentPlayer.items);
+    AllRooms[parseInt(newRoom.id)].beCapture();
+  }
+//   console.log(players.map((e) => e.curId));
+  checkWIN();
 }
