@@ -6,6 +6,7 @@ const numCard = document.getElementById("card-num");
 const button = document.getElementById("btn");
 const startScreen = document.getElementById("start-screen");
 const mainGame = document.getElementById("main-game");
+const info = document.getElementById('info')
 const positionOfRooms = [];
 const fixedPositions = [];
 const dynamicPosition = [];
@@ -13,6 +14,7 @@ const AllRooms = Array(51);
 let numberOfPlayers = 2;
 let numberOfTreasuresPerPlayer;
 let allTreasures;
+let currentPlayerNumber = 0;
 const pColor = ["red", "blue", "black", "green"];
 const pStartID = [1, 4, 13, 16];
 const players = [];

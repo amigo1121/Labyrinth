@@ -82,3 +82,31 @@ body{
     width: 100vw;
     height: 100vh;
 }
+#icon{
+    position: fixed;
+    right: 50px;
+    top: 50px;
+}
+#instruct{
+    background-color: aqua;
+    width: 20%;
+    position: fixed;
+    right: 50px;
+    top: 70px;
+    z-index: 99;
+}
+#info
+{
+    background-color: aqua;
+    width: 20%;
+    position: fixed;
+    right: 50px;
+    top: 200px;
+    z-index: 99;
+}
+#information
+{
+    position: fixed;
+    right: 50px;
+    top: 100px;
+}
