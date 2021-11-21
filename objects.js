@@ -4,9 +4,10 @@ const roomTypes = {
   "t-shape": [true, true, false, true],
 };
 class room {
-  constructor(type, num, id) {
+  constructor(type, num, id,treasure) {
     this.type = type;
     this.id = id;
+    this.treasure=treasure;
     this.door = Array.from(roomTypes[this.type]);
     // console.log(Math.round(num))
     this.num = Math.floor(num);
@@ -23,6 +24,11 @@ class room {
   beRotated() {
     const d = this.door.pop();
     this.door.unshift(d);
+  }
+  beCapture(){
+      this.treasure=undefined;
+      const p = document.getElementById(this.id);
+      p.innerText=undefined;
   }
 }
 export { room };

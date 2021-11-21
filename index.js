@@ -5,6 +5,23 @@ const positionOfRooms = [];
 const fixedPositions = [];
 const dynamicPosition = [];
 const AllRooms = Array(51);
+const numberOfPlayers = 2;
+let numberOfTreasuresPerPlayer = Math.floor(
+  Math.random()*((24 / numberOfPlayers)-1) + 1
+);
+numberOfTreasuresPerPlayer=  numberOfTreasuresPerPlayer>2? numberOfTreasuresPerPlayer:2;
+const allTreasures = numberOfPlayers * numberOfTreasuresPerPlayer;
+console.log("tr", numberOfTreasuresPerPlayer);
+console.log("num of tre", allTreasures);
+const treasureArr = [];
+function initTreasureArr() {
+  for (let i = 1; i <= allTreasures; i++) {
+    treasureArr.push(i);
+  }
+  treasureArr.sort((a, b) => Math.random() * 4 -2);
+}
+initTreasureArr();
+console.log("arr tre", treasureArr);
 let slideIDs = [];
 let dragged;
 let ID = 0;
@@ -22,7 +39,7 @@ let remainRoom;
 let remainPiece;
 // console.log(positionOfRooms)
 
-function genGUIRoom(r, x, y, content) {
+function genGUIRoom(r, x, y) {
   const img = document.createElement("div");
   img.style.background = `url(./img/${r.type}.png)`;
   img.id = r.id;
@@ -30,6 +47,8 @@ function genGUIRoom(r, x, y, content) {
   img.style.transform += `rotate(${r.ang}deg)`;
   img.style.top = `${x}px`;
   img.style.left = `${y}px`;
+  img.style.fontSize = "20px";
+  if (r.treasure != undefined) img.innerText = r.treasure;
   return img;
 }
 const fixedRooms = [
@@ -95,15 +114,15 @@ function initMaze() {
   }
   rid.sort((a, b) => Math.random() * 4 - 2);
   console.log(rid);
-  remainRoom = new room(rid.pop(), 0, 50);
+  remainRoom = new room(rid.pop(), 0, 50,treasureArr.pop());
   AllRooms[remainRoom.id] = remainRoom;
-  remainDiv.append(genGUIRoom(remainRoom, 0, 0, "remain"));
+  remainDiv.append(genGUIRoom(remainRoom, 0, 0));
   console.log(rid);
   console.log(dynamicPosition);
   rid.forEach((e, i) => {
     const xPos = dynamicPosition[i].x;
     const yPos = dynamicPosition[i].y;
-    const r = new room(e, Math.random() * 4, genId());
+    const r = Math.random() <0.5? new room(e, Math.random() * 4, genId(),treasureArr.pop()) : new room(e, Math.random() * 4, genId());
     AllRooms[r.id] = r;
     maze.append(genGUIRoom(r, xPos, yPos));
     const x = xPos / 100;
