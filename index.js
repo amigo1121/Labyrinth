@@ -22,10 +22,9 @@ let remainRoom;
 let remainPiece;
 // console.log(positionOfRooms)
 
-function genGUIRoom(r, x, y) {
-   
-  const img = document.createElement("img");
-  img.src = `./img/${r.type}.png`;
+function genGUIRoom(r, x, y, content) {
+  const img = document.createElement("div");
+  img.style.background = `url(./img/${r.type}.png)`;
   img.id = r.id;
   img.classList.add("room");
   img.style.transform += `rotate(${r.ang}deg)`;
@@ -98,7 +97,7 @@ function initMaze() {
   console.log(rid);
   remainRoom = new room(rid.pop(), 0, 50);
   AllRooms[remainRoom.id] = remainRoom;
-  remainDiv.append(genGUIRoom(remainRoom, 0, 0));
+  remainDiv.append(genGUIRoom(remainRoom, 0, 0, "remain"));
   console.log(rid);
   console.log(dynamicPosition);
   rid.forEach((e, i) => {
@@ -122,7 +121,7 @@ function genId() {
 remainDiv.addEventListener("click", rotateIMG);
 function rotateIMG(event) {
   const t = event.target;
-  if (!t.matches("img")) return;
+  if (!t.matches(".room")) return;
   t.style.transform += "rotate(90deg)";
   remainRoom.beRotated();
   // console.log(remainPiece.door);
@@ -240,6 +239,7 @@ document.addEventListener(
       moveTo(dragged, x, y);
       // console.log(dragged);
       // TODO insert img to maze
+      dragged.setAttribute("draggable", "false");
       maze.appendChild(dragged);
       // TODO make slide animmation
       collectIDs(event.target);
@@ -253,8 +253,9 @@ document.addEventListener(
       console.log("remain piece", remainPiece);
       // TODO MOVE REMAIN IMG TO REMAINDIV
       remainDiv.appendChild(remainPiece);
+      makeRemainPieceDraggable();
     }
-    console.log('graph after drop',graph);
+    console.log("graph after drop", graph);
   },
   false
 );
@@ -341,13 +342,13 @@ function changeGraph(type, dir, num) {
   }
 }
 function validMove(x, y) {
-   console.log('x',x,'y',y,'prex',previousX,'prey',previousY);
+  console.log("x", x, "y", y, "prex", previousX, "prey", previousY);
   let ans = true;
   if (x === previousX) {
-    if (y + previousY === 600 && y*previousY <0) ans = false;
+    if (y + previousY === 600 && y * previousY < 0) ans = false;
   }
   if (y === previousY) {
-    if (x + previousX === 600 && x*previousX <0) ans = false;
+    if (x + previousX === 600 && x * previousX < 0) ans = false;
   }
   return ans;
 }
