@@ -9,6 +9,7 @@ const numberOfPlayers = 4;
 const pColor = ["red", "blue", "black", "green"];
 const pStartID = [1, 4, 13, 16];
 const players = [];
+let possibleRoom = [];
 let numberOfTreasuresPerPlayer = Math.floor(
   Math.random() * (24 / numberOfPlayers - 1) + 1
 );
@@ -32,11 +33,14 @@ initTreasureArr();
 // TODO INIT PALYER ARRAY
 function initPlayerArr() {
   for (let i = 0; i < numberOfPlayers; i++) {
-    const its = treasureArr.slice(i*numberOfTreasuresPerPlayer, i*numberOfTreasuresPerPlayer+numberOfTreasuresPerPlayer);
-    const pl = new player(its,genId(),pColor[i],pStartID[i]);
+    const its = treasureArr.slice(
+      i * numberOfTreasuresPerPlayer,
+      i * numberOfTreasuresPerPlayer + numberOfTreasuresPerPlayer
+    );
+    const pl = new player(its, genId(), pColor[i], pStartID[i]);
     players.push(pl);
   }
-  console.log('arr of player',players);
+  console.log("arr of player", players);
 }
 
 let slideIDs = [];
@@ -153,7 +157,7 @@ function initMaze() {
 initMaze();
 console.log("graph", graph);
 function genId() {
-  ID=ID+1;
+  ID = ID + 1;
   return ID;
 }
 
@@ -185,6 +189,10 @@ document.addEventListener(
     // make it half transparent
     console.log(event.target);
     event.target.style.opacity = 0.5;
+    if (dragged.className.includes("player")) {
+      //  FIXME implement bfs
+      bfs();
+    }
   },
   false
 );
@@ -194,6 +202,12 @@ document.addEventListener(
   function (event) {
     // reset the transparency
     event.target.style.opacity = "";
+    if (dragged.className.includes("player")) {
+      possibleRoom.forEach((e) => {
+        e.style.opacity = "";
+      });
+      possibleRoom = [];
+    }
   },
   false
 );
@@ -204,8 +218,12 @@ document.addEventListener(
   function (event) {
     // prevent default to allow drop
     const t = event.target;
-    if (!t.matches(".dropable")) return;
-    event.preventDefault();
+    if (
+      (t.matches(".dropable") && dragged.className.includes("room")) ||
+      (t.matches(".room") && dragged.className.includes('player'))
+    )
+      event.preventDefault();
+    else return;
     // console.log(t)
   },
   false
@@ -215,7 +233,10 @@ document.addEventListener(
   "dragenter",
   function (event) {
     // highlight potential drop target when the draggable element enters it
-    if (event.target.className.includes("dropable")) {
+    if (
+      event.target.className.includes("dropable") &&
+      dragged.className.includes("room")
+    ) {
       event.target.style.boxShadow = "0px 0px 10px 3px #FAFF00";
     }
   },
@@ -253,13 +274,18 @@ function moveTo(element, x, y) {
   element.style.top = `${x}px`;
   element.style.left = `${y}px`;
 }
+
+// TODO the DROP 
 document.addEventListener(
   "drop",
   function (event) {
     // prevent default action (open as link for some elements)
     event.preventDefault();
     // move dragged elem to the selected drop target
-    if (event.target.className.includes("dropable")) {
+    if (
+      event.target.className.includes("dropable") &&
+      dragged.className.includes("room")
+    ) {
       event.target.style.border = "";
       event.target.style.boxShadow = "";
       let data = event.target.dataset;
@@ -294,7 +320,18 @@ document.addEventListener(
       remainDiv.appendChild(remainPiece);
       makeRemainPieceDraggable();
     }
-    console.log("graph after drop", graph);
+    if (
+      event.target.className.includes("room") &&
+      dragged.className.includes("player")
+    ) {
+      console.log("pleyer move");
+      if (possibleRoom.includes(event.target)) {
+        console.log("taget", event.target);
+        dragged.parentNode.removeChild(dragged);
+        event.target.appendChild(dragged);
+      }
+    }
+    //  console.log("graph after drop", graph);
   },
   false
 );
@@ -394,11 +431,63 @@ function validMove(x, y) {
 
 initPlayerArr();
 // TODO put player in start position
-function spawnPlayers()
-{
-   players.forEach((p,i)=>{
-      const r = document.getElementById(p.curId);
-      r.appendChild(p.gui);
-   })
+function spawnPlayers() {
+  players.forEach((p, i) => {
+    const r = document.getElementById(p.curId);
+    r.appendChild(p.gui);
+  });
 }
 spawnPlayers();
+function inRange(x, y) {
+  return 0 <= x && x < 7 && 0 <= y && y < 7;
+}
+// TODO breadth first search
+function bfs() {
+  const e = [-1, 0, 1, 0];
+  const f = [0, 1, 0, -1];
+  let isVisited = new Array(100);
+  let q = [];
+  for (let i = 0; i < isVisited.length; i++) {
+    isVisited[i] = false;
+  }
+  let v, xPos, yPos;
+  v = dragged.parentNode;
+  [xPos, yPos] = getRoomCoor(v);
+  xPos /= 100;
+  yPos /= 100;
+  console.log(v);
+  console.log("x", xPos, "y", yPos);
+  q.push({ v, x: xPos, y: yPos });
+  possibleRoom.push(v);
+  isVisited[v.id] = true;
+  while (q.length > 0) {
+    let top = q.shift();
+    console.log("top", top);
+    //  top.v the GUI element
+    const r = AllRooms[top.v.id];
+    console.log("r", r);
+    r.door.forEach((d, i) => {
+      if (d) {
+        let newX = top.x + e[i];
+        let newY = top.y + f[i];
+        //   console.log(newX,newY);
+        if (inRange(newX, newY)) {
+          if (graph[newX][newY].door[(i + 2) % 4]) {
+            //   console.log('possible',graph[newX][newY]);
+            const newRoom = graph[newX][newY];
+            if (!isVisited[newRoom.id]) {
+              isVisited[newRoom.id] = true;
+              const u = document.getElementById(newRoom.id);
+              possibleRoom.push(u);
+              q.push({ v: u, x: newX, y: newY });
+              // u.style.opacity="0.5";
+            }
+          }
+        }
+      }
+    });
+  }
+  possibleRoom.forEach((e) => {
+    e.style.opacity = "0.5";
+  });
+}

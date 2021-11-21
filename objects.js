@@ -42,6 +42,7 @@ class player {
     this.gui.style.backgroundColor = this.color;
     this.gui.id = id;
     this.gui.classList.add("player");
+    this.gui.setAttribute("draggable", "true");
   }
   genPlayer() {
     const p = document.createElement("div");
