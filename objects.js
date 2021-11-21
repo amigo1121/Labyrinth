@@ -31,4 +31,28 @@ class room {
       p.innerText=undefined;
   }
 }
-export { room };
+class player {
+    constructor(items,id,color,startId){
+        this.items=items;
+        this.id=id; // id of the player element;
+        this.color=color;
+        this.startId=startId; // id of the starting room
+        this.curId = startId; // id of the current room
+    }
+    genPlayer()
+    {
+        const p = document.createElement('div')
+        p.style.backgroundColor=this.color;
+        p.id=this.id;
+        p.classList.add('player');
+    }
+    getStandingRoom()
+    {
+        return document.getElementById(this.curId);
+    }
+    getPlayer()
+    {
+        return document.getElementById(this.id);
+    }
+}
+export { room ,player};
