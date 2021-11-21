@@ -9,6 +9,8 @@ let slideIDs = [];
 let dragged;
 let ID = 0;
 let graph;
+let previousX = -1,
+  previousY = -1;
 function initGraph() {
   graph = new Array(7);
   for (let i = 0; i < graph.length; i++) {
@@ -121,7 +123,7 @@ function rotateIMG(event) {
   const t = event.target;
   if (!t.matches("img")) return;
   t.style.transform += "rotate(90deg)";
-  remainPiece.beRotated();
+  remainRoom.beRotated();
   // console.log(remainPiece.door);
 }
 // get rooms from an row or a collumn
@@ -222,11 +224,17 @@ document.addEventListener(
       event.target.style.border = "";
       event.target.style.boxShadow = "";
       let data = event.target.dataset;
+      let x, y;
+      [x, y] = getStartCoord(event.target);
+      // TODO prevent the undo
+      if (!validMove(x, y)) return;
+      else {
+        previousX = x;
+        previousY = y;
+      }
       // TODO remove img from remaind div
       dragged.parentNode.removeChild(dragged);
       // TODO set the x and y of new img
-      let x, y;
-      [x, y] = getStartCoord(event.target);
       // console.log(x,y);
       moveTo(dragged, x, y);
       // console.log(dragged);
@@ -248,6 +256,7 @@ document.addEventListener(
   },
   false
 );
+
 function collectIDs(arrow) {
   const data = arrow.dataset;
   console.log(data);
@@ -256,22 +265,26 @@ function collectIDs(arrow) {
     graph[r].forEach((e, i) => {
       slideIDs.push(+e.id);
     });
+    changeGraph(data.type, data.dir, r);
   }
   if (data.type === "col") {
     const c = data.y / 100;
     graph.forEach((row, i) => {
       slideIDs.push(+row[c].id);
     });
+    changeGraph(data.type, data.dir, c);
   }
   if (data.dir === "up" || data.dir === "left")
     remainPiece = document.getElementById(slideIDs[0]);
   else remainPiece = document.getElementById(slideIDs[slideIDs.length - 1]);
 }
+
 function getRoomCoor(room) {
   let x = parseInt(room.style.top.replace("px", ""));
   let y = parseInt(room.style.left.replace("px", ""));
   return [x, y];
 }
+
 // TODO a function which is shift whole row or collumn
 function shiftRooms(IdArray, type, dir) {
   const rooms = IdArray.map((e) => document.getElementById(e));
@@ -291,5 +304,48 @@ function shiftRooms(IdArray, type, dir) {
     [x, y] = getRoomCoor(e);
     moveTo(e, x + deltaX, y + deltaY);
   });
+
   slideIDs = [];
+}
+
+function changeGraph(type, dir, num) {
+  if (type === "row") {
+    if (dir === "right") {
+      let temp = graph[num].pop();
+      graph[num].unshift(remainRoom);
+      remainRoom = temp;
+    } else {
+      let temp = graph[num].shift();
+      graph[num].push(remainRoom);
+      remainRoom = temp;
+    }
+  }
+  if (type === "col") {
+    if (dir === "up") {
+      let temp = graph[0][num];
+      for (let i = 1; i < 7; i++) {
+        graph[i - 1][num] = graph[i][num];
+      }
+      graph[6][num] = remainRoom;
+      remainRoom = temp;
+    } else {
+      let temp = graph[6][num];
+      for (let i = 6; i > 0; i--) {
+        graph[i][num] = graph[i - 1][num];
+      }
+      graph[0][num] = remainRoom;
+      remainRoom = temp;
+    }
+  }
+}
+function validMove(x, y) {
+   console.log('x',x,'y',y,'prex',previousX,'prey',previousY);
+  let ans = true;
+  if (x === previousX) {
+    if (y + previousY === 600) ans = false;
+  }
+  if (y === previousY) {
+    if (x + previousX === 600) ans = false;
+  }
+  return ans;
 }
