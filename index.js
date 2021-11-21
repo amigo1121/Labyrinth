@@ -1,22 +1,48 @@
 import { room, player } from "./objects.js";
 const maze = document.querySelector(".maze");
 const remainDiv = document.querySelector("#left");
+const numPlayer = document.getElementById("player-num");
+const numCard = document.getElementById("card-num");
+const button = document.getElementById("btn");
+const startScreen = document.getElementById("start-screen");
+const mainGame = document.getElementById("main-game");
 const positionOfRooms = [];
 const fixedPositions = [];
 const dynamicPosition = [];
 const AllRooms = Array(51);
-const numberOfPlayers = 2;
+let numberOfPlayers = 2;
+let numberOfTreasuresPerPlayer;
+let allTreasures;
 const pColor = ["red", "blue", "black", "green"];
 const pStartID = [1, 4, 13, 16];
 const players = [];
 let possibleRoom = [];
-let numberOfTreasuresPerPlayer = Math.floor(
-  Math.random() * (24 / numberOfPlayers - 1) + 1
-);
-numberOfTreasuresPerPlayer = 2;
-numberOfTreasuresPerPlayer =
-  numberOfTreasuresPerPlayer > 2 ? numberOfTreasuresPerPlayer : 2;
-const allTreasures = numberOfPlayers * numberOfTreasuresPerPlayer;
+numPlayer.addEventListener("input", Preload);
+function Preload() {
+  numberOfPlayers = parseInt(numPlayer.value);
+  numCard.setAttribute("max", 24 / numberOfPlayers);
+  numCard.setAttribute("value", 24 / numberOfPlayers);
+}
+
+button.addEventListener("click", loadGame);
+function loadGame() {
+  numberOfPlayers = parseInt(numPlayer.value);
+  numberOfTreasuresPerPlayer = parseInt(numCard.value);
+  startScreen.hidden = true;
+  mainGame.hidden = false;
+  allTreasures = numberOfPlayers * numberOfTreasuresPerPlayer;
+  initTreasureArr();
+  initGraph();
+  initMaze();
+  makeRemainPieceDraggable();
+  initPlayerArr();
+  spawnPlayers();
+}
+//  numberOfTreasuresPerPlayer = Math.floor(
+//   Math.random() * (24 / numberOfPlayers - 1) + 1
+// );
+// numberOfTreasuresPerPlayer = 2;
+
 console.log("tr", numberOfTreasuresPerPlayer);
 console.log("num of tre", allTreasures);
 const treasureArr = [];
@@ -32,7 +58,6 @@ function initTreasureArr() {
     treasure2.push(e);
   });
 }
-initTreasureArr();
 
 // TODO INIT PALYER ARRAY
 function initPlayerArr() {
@@ -59,10 +84,8 @@ function initGraph() {
     graph[i] = new Array(7);
   }
 }
-initGraph();
 let remainRoom;
 let remainPiece;
-// console.log(positionOfRooms)
 
 function genGUIRoom(r, x, y) {
   const img = document.createElement("div");
@@ -97,12 +120,6 @@ const fixedRooms = [
   ["t-shape", 0],
   ["bend", 3],
 ];
-// const button = document.querySelector('button');
-// const i = document.querySelector('.room');
-// button.addEventListener('click',f)
-// function f(e){
-//    i.style.transform+='rotate(90deg)'
-// }
 
 function initMaze() {
   for (let i = 0; i < 7; i++) {
@@ -158,8 +175,7 @@ function initMaze() {
     graph[x][y] = r;
   });
 }
-initMaze();
-console.log("graph", graph);
+// console.log("graph", graph);
 function genId() {
   ID = ID + 1;
   return ID;
@@ -173,8 +189,6 @@ function rotateIMG(event) {
   remainRoom.beRotated();
   // console.log(remainPiece.door);
 }
-// get rooms from an row or a collumn
-function collectRooms(arrow) {}
 // TODO make extend piece draggable
 function makeRemainPieceDraggable() {
   const obj = remainDiv.firstElementChild;
@@ -183,7 +197,6 @@ function makeRemainPieceDraggable() {
     obj.setAttribute("draggable", "true");
   }
 }
-makeRemainPieceDraggable();
 // TODO drag and drop event
 document.addEventListener(
   "dragstart",
@@ -326,7 +339,7 @@ document.addEventListener(
       Array.from(remainPiece.children).forEach((child) => {
         if (child.className.includes("player")) {
           const t = child;
-          comeToNewRoom(t,dragged);
+          comeToNewRoom(t, dragged);
         }
       });
       makeRemainPieceDraggable();
@@ -452,7 +465,6 @@ function validMove(x, y) {
   return ans;
 }
 
-initPlayerArr();
 // TODO put player in start position
 function spawnPlayers() {
   players.forEach((p, i) => {
@@ -460,7 +472,6 @@ function spawnPlayers() {
     r.appendChild(p.gui);
   });
 }
-spawnPlayers();
 function inRange(x, y) {
   return 0 <= x && x < 7 && 0 <= y && y < 7;
 }
@@ -532,6 +543,6 @@ function comeToNewRoom(player, newRoom) {
     console.log(currentPlayer.items);
     AllRooms[parseInt(newRoom.id)].beCapture();
   }
-//   console.log(players.map((e) => e.curId));
+  //   console.log(players.map((e) => e.curId));
   checkWIN();
 }

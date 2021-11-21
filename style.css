@@ -14,7 +14,7 @@ body{
 .maze{
     margin: 0 auto;
     display: inline-block;
-    position: fixed;
+    position: absolute;
     border: 2px solid blueviolet; 
     height: 700px;
     width: 700px;
@@ -78,7 +78,7 @@ body{
     width: 30px;
     height: 30px;
 }
-.main-game{
-    width: 100%;
-    height: 100%;
+#main-game{
+    width: 100vw;
+    height: 100vh;
 }
