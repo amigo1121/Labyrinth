@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 </head>
+
 <body>
-       <div class="maze">
-           <!-- <img src="./img/bend.png" alt="" class="room"> -->
-       </div>
-       <div id="left"></div>
-       <!-- <button>buton</button> -->
-       <script src="index.js" type="module"></script>
+    <div class="maze">
+        <!-- <img src="./img/bend.png" alt="" class="room"> -->
+    </div>
+    <div id="left"></div>
+    <div class="arrow-panel" id="top">
+        <i class="fas fa-caret-down fa-4x" data-x="0" data-y="100" data-dir="down" data-type="col"></i>
+        <i class="fas fa-caret-down fa-4x" data-x="0" data-y="300" data-dir="down" data-type="col"></i>
+        <i class="fas fa-caret-down fa-4x" data-x="0" data-y="500" data-dir="down" data-type="col"></i>
+    </div>
+    <div class="arrow-panel" id="bottom">
+        <i class="fas fa-caret-up fa-4x" data-x="600" data-y="100" data-dir="up" data-type="col"></i>
+        <i class="fas fa-caret-up fa-4x" data-x="600" data-y="300" data-dir="up" data-type="col"></i>
+        <i class="fas fa-caret-up fa-4x" data-x="600" data-y="500" data-dir="up" data-type="col"></i>
+    </div>
+    <div class="arrow-panel" id="west">
+        <i class="fas fa-caret-up fa-4x" data-x="100" data-y="0" data-dir="right" data-type="row"></i>
+        <i class="fas fa-caret-up fa-4x" data-x="300" data-y="0" data-dir="right" data-type="row"></i>
+        <i class="fas fa-caret-up fa-4x" data-x="500" data-y="0" data-dir="right" data-type="row"></i>
+    </div>
+    <div class="arrow-panel" id="east">
+        <i class="fas fa-caret-down fa-4x" data-x="100" data-y="600" data-dir="left" data-type="row"></i>
+        <i class="fas fa-caret-down fa-4x" data-x="300" data-y="600" data-dir="left" data-type="row"></i>
+        <i class="fas fa-caret-down fa-4x" data-x="500" data-y="600" data-dir="left" data-type="row"></i>
+    </div>
+    <!-- <button>buton</button> -->
+    <script src="index.js" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
 </body>
+
 </html>
