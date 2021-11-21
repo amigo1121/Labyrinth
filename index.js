@@ -1,27 +1,44 @@
-import { room } from "./objects.js";
+import { room, player } from "./objects.js";
 const maze = document.querySelector(".maze");
 const remainDiv = document.querySelector("#left");
 const positionOfRooms = [];
 const fixedPositions = [];
 const dynamicPosition = [];
 const AllRooms = Array(51);
-const numberOfPlayers = 2;
+const numberOfPlayers = 4;
+const pColor = ["red", "blue", "black", "green"];
+const pStartID = [1, 4, 13, 16];
+const players = [];
 let numberOfTreasuresPerPlayer = Math.floor(
-  Math.random()*((24 / numberOfPlayers)-1) + 1
+  Math.random() * (24 / numberOfPlayers - 1) + 1
 );
-numberOfTreasuresPerPlayer=  numberOfTreasuresPerPlayer>2? numberOfTreasuresPerPlayer:2;
+numberOfTreasuresPerPlayer =
+  numberOfTreasuresPerPlayer > 2 ? numberOfTreasuresPerPlayer : 2;
 const allTreasures = numberOfPlayers * numberOfTreasuresPerPlayer;
 console.log("tr", numberOfTreasuresPerPlayer);
 console.log("num of tre", allTreasures);
 const treasureArr = [];
+
+// TODO INIT TREASURE ARRAY
 function initTreasureArr() {
   for (let i = 1; i <= allTreasures; i++) {
     treasureArr.push(i);
   }
-  treasureArr.sort((a, b) => Math.random() * 4 -2);
+  treasureArr.sort((a, b) => Math.random() * 4 - 2);
+  console.log("arr tre", treasureArr);
 }
 initTreasureArr();
-console.log("arr tre", treasureArr);
+
+// TODO INIT PALYER ARRAY
+function initPlayerArr() {
+  for (let i = 0; i < numberOfPlayers; i++) {
+    const its = treasureArr.slice(i*numberOfTreasuresPerPlayer, i*numberOfTreasuresPerPlayer+numberOfTreasuresPerPlayer);
+    const pl = new player(its,genId(),pColor[i],pStartID[i]);
+    players.push(pl);
+  }
+  console.log('arr of player',players);
+}
+
 let slideIDs = [];
 let dragged;
 let ID = 0;
@@ -114,7 +131,7 @@ function initMaze() {
   }
   rid.sort((a, b) => Math.random() * 4 - 2);
   console.log(rid);
-  remainRoom = new room(rid.pop(), 0, 50,treasureArr.pop());
+  remainRoom = new room(rid.pop(), 0, genId(), treasureArr.pop());
   AllRooms[remainRoom.id] = remainRoom;
   remainDiv.append(genGUIRoom(remainRoom, 0, 0));
   console.log(rid);
@@ -122,7 +139,10 @@ function initMaze() {
   rid.forEach((e, i) => {
     const xPos = dynamicPosition[i].x;
     const yPos = dynamicPosition[i].y;
-    const r = Math.random() <0.5? new room(e, Math.random() * 4, genId(),treasureArr.pop()) : new room(e, Math.random() * 4, genId());
+    const r =
+      Math.random() < 0.5
+        ? new room(e, Math.random() * 4, genId(), treasureArr.pop())
+        : new room(e, Math.random() * 4, genId());
     AllRooms[r.id] = r;
     maze.append(genGUIRoom(r, xPos, yPos));
     const x = xPos / 100;
@@ -133,7 +153,7 @@ function initMaze() {
 initMaze();
 console.log("graph", graph);
 function genId() {
-  ID++;
+  ID=ID+1;
   return ID;
 }
 
@@ -156,7 +176,7 @@ function makeRemainPieceDraggable() {
   }
 }
 makeRemainPieceDraggable();
-// TODO
+// TODO drag and drop event
 document.addEventListener(
   "dragstart",
   function (event) {
@@ -371,3 +391,14 @@ function validMove(x, y) {
   }
   return ans;
 }
+
+initPlayerArr();
+// TODO put player in start position
+function spawnPlayers()
+{
+   players.forEach((p,i)=>{
+      const r = document.getElementById(p.curId);
+      r.appendChild(p.gui);
+   })
+}
+spawnPlayers();

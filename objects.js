@@ -4,10 +4,10 @@ const roomTypes = {
   "t-shape": [true, true, false, true],
 };
 class room {
-  constructor(type, num, id,treasure) {
+  constructor(type, num, id, treasure) {
     this.type = type;
     this.id = id;
-    this.treasure=treasure;
+    this.treasure = treasure;
     this.door = Array.from(roomTypes[this.type]);
     // console.log(Math.round(num))
     this.num = Math.floor(num);
@@ -25,34 +25,35 @@ class room {
     const d = this.door.pop();
     this.door.unshift(d);
   }
-  beCapture(){
-      this.treasure=undefined;
-      const p = document.getElementById(this.id);
-      p.innerText=undefined;
+  beCapture() {
+    this.treasure = undefined;
+    const p = document.getElementById(this.id);
+    p.innerText = undefined;
   }
 }
 class player {
-    constructor(items,id,color,startId){
-        this.items=items;
-        this.id=id; // id of the player element;
-        this.color=color;
-        this.startId=startId; // id of the starting room
-        this.curId = startId; // id of the current room
-    }
-    genPlayer()
-    {
-        const p = document.createElement('div')
-        p.style.backgroundColor=this.color;
-        p.id=this.id;
-        p.classList.add('player');
-    }
-    getStandingRoom()
-    {
-        return document.getElementById(this.curId);
-    }
-    getPlayer()
-    {
-        return document.getElementById(this.id);
-    }
+  constructor(items, id, color, startId) {
+    this.items = items;
+    this.id = id; // id of the player element;
+    this.color = color;
+    this.startId = startId; // id of the starting room
+    this.curId = startId; // id of the current room
+    this.gui = document.createElement("div");
+    this.gui.style.backgroundColor = this.color;
+    this.gui.id = id;
+    this.gui.classList.add("player");
+  }
+  genPlayer() {
+    const p = document.createElement("div");
+    p.style.backgroundColor = this.color;
+    p.id = this.id;
+    p.classList.add("player");
+  }
+  getStandingRoom() {
+    return document.getElementById(this.curId);
+  }
+  getPlayer() {
+    return document.getElementById(this.id);
+  }
 }
-export { room ,player};
+export { room, player };
