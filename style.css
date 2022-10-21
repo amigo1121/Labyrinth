@@ -5,11 +5,16 @@ body{
 .room{
     position: absolute;
     transition: all 0.5s;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .maze{
     margin: 0 auto;
     display: inline-block;
-    position: fixed;
+    position: absolute;
     border: 2px solid blueviolet; 
     height: 700px;
     width: 700px;
@@ -26,4 +31,82 @@ body{
     left: 50px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.arrow-panel
+{
+    position: absolute;
+    height: 100px;
+    width: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    /* border: 2px solid lawngreen; */
+    background-color: rgb(72,61,139);
+    padding-left: 100px;
+    padding-right: 100px;
+}
+.arrow-panel i{
+    padding: 15px 30px;
+    cursor: pointer;
+}
+
+#top{
+    left: 50%;
+    transform: translateX(-50%) translateY(-450px);
+    top: 50%;
+    
+}
+
+#bottom{
+    left: 50%;
+    transform: translateX(-50%) translateY(450px);
+    bottom: 50%;
+}
+
+#west{
+    top: 50%;
+    right: 50%;
+    transform: translateX(50px) translateY(-50%) rotate(90deg) 
+}
+#east{
+    top:50%;
+    left: 50%;
+    transform: translateX(-50px) translateY(-50%) rotate(90deg);
+}
+.player{
+    width: 30px;
+    height: 30px;
+}
+#main-game{
+    width: 100vw;
+    height: 100vh;
+}
+#icon{
+    position: fixed;
+    right: 50px;
+    top: 50px;
+}
+#instruct{
+    background-color: aqua;
+    width: 20%;
+    position: fixed;
+    right: 50px;
+    top: 70px;
+    z-index: 99;
+}
+#info
+{
+    background-color: aqua;
+    width: 30%;
+    position: fixed;
+    right: 50px;
+    top: 120px;
+    z-index: 99;
+}
+#infomation
+{
+    position: fixed;
+    right: 50px;
+    top: 100px;
 }

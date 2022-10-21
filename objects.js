@@ -1,44 +1,60 @@
 const roomTypes = {
-    'bend': [true, true, false, false],
-    'straight': [false, true, false, true],
-    't-shape': [true, true, false, true]
-}
+  bend: [true, true, false, false],
+  straight: [false, true, false, true],
+  "t-shape": [true, true, false, true],
+};
 class room {
-    constructor(x, y, type, num ,id) {
-        this.x = x;
-        this.y = y;
-        this.type = type;
-        this.id=id;
-        this.door = roomTypes[this.type];
-        this.gui = document.createElement('img');
-        this.gui.src = `./img/${this.type}.png`
-        this.gui.id=id;
-        this.gui.classList.add('room');
-        // console.log(Math.round(num))
-        this.num=Math.floor(num);
-        this.rotate(this.num);
+  constructor(type, num, id, treasure) {
+    this.type = type;
+    this.id = id;
+    this.treasure = treasure;
+    this.door = Array.from(roomTypes[this.type]);
+    // console.log(Math.round(num))
+    this.num = Math.floor(num);
+    this.ang = 0;
+    for (let i = 0; i < this.num; i++) {
+      // console.log(this.door)
+      this.ang += 90;
+      this.ang %= 360;
+      let d = this.door.pop();
+      this.door.unshift(d);
+      // console.log(this.door)
     }
-
-    rotate(num) {
-        let ang = 0;
-        for (let i = 0; i < num; i++) {
-            ang += 90;
-            const d = this.door.pop();
-            this.door.unshift(d);
-        }
-        this.gui.style.transform += `rotate(${ang}deg)`;
-    }
-
-    render() {
-        this.gui.style.top = `${this.x}px`;
-        this.gui.style.left = `${this.y}px`;
-    }
-
-    beRotated()
-    {
-        const d = this.door.pop();
-        this.door.unshift(d);
-    }
-    
+  }
+  beRotated() {
+    const d = this.door.pop();
+    this.door.unshift(d);
+  }
+  beCapture() {
+    this.treasure = undefined;
+    const p = document.getElementById(this.id);
+    p.removeChild(p.firstChild)
+  }
 }
-export { room }
+class player {
+  constructor(items, id, color, startId) {
+    this.items = items;
+    this.id = id; // id of the player element;
+    this.color = color;
+    this.startId = startId; // id of the starting room
+    this.curId = startId; // id of the current room
+    this.gui = document.createElement("div");
+    this.gui.style.backgroundColor = this.color;
+    this.gui.id = id;
+    this.gui.classList.add("player");
+    this.gui.setAttribute("draggable", "true");
+  }
+  genPlayer() {
+    const p = document.createElement("div");
+    p.style.backgroundColor = this.color;
+    p.id = this.id;
+    p.classList.add("player");
+  }
+  getStandingRoom() {
+    return document.getElementById(this.curId);
+  }
+  getPlayer() {
+    return document.getElementById(this.id);
+  }
+}
+export { room, player };
